@@ -448,11 +448,16 @@ export default {
             const plainText = text.replace(/<[^>]*>/g, "");
             return plainText.length > length ? plainText.substring(0, length) + "..." : plainText;
         },
-        // 👉 Hàm thêm vào giỏ hàng
+
         addToCart(course) {
             const cartStore = useCartStore();
+            const existingItem = cartStore.cartItems.find(item => item.id === course.id);
+            if (existingItem) {
+                this.$toast.warning("⚠ Khóa học đã có trong giỏ hàng!");
+                return;
+            }
             cartStore.addToCart(course);
-            this.$toast.success("Đã thêm vào giỏ hàng!");
+            this.$toast.success("✅ Đã thêm vào giỏ hàng!");
         },
         getAvatarUrl(avatar) {
             return `http://127.0.0.1:8000/storage/${avatar}`;
@@ -462,5 +467,5 @@ export default {
 </script>
 
 <style scoped>
-@import '@/assets/css/commonStyles.css'; 
+@import '@/assets/css/commonStyles.css';
 </style>

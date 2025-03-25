@@ -191,6 +191,8 @@ export default {
                         localStorage.removeItem("so_du");
                         localStorage.removeItem("check_kh");
                         localStorage.removeItem("chatHistory");
+                        localStorage.removeItem("cart");
+
 
                         Swal.fire({
                             title: "Thông báo!",
@@ -244,6 +246,8 @@ export default {
                         localStorage.removeItem("so_du");
                         localStorage.removeItem("check_kh");
                         localStorage.removeItem("chatHistory");
+                        localStorage.removeItem("cart");
+
 
                         Swal.fire({
                             title: "Thông báo!",

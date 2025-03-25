@@ -165,7 +165,6 @@ export default {
 </script>
 
 <style scoped>
-/* From Uiverse.io by vinodjangid07 */
 .button {
     width: 50px;
     height: 50px;
