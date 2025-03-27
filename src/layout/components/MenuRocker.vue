@@ -2,7 +2,7 @@
 <div class="nav-container primary-menu">
     <div class="mobile-topbar-header">
         <div>
-            <img src="../../assets/images/logo-icon.png" class="logo-icon" alt="logo icon">
+            <img src="https://i.pinimg.com/736x/78/4d/19/784d19602be7f1d070b6a13001b7fc5c.jpg" class="logo-icon" alt="logo icon">
         </div>
         <div>
             <h4 class="logo-text">Rukada</h4>

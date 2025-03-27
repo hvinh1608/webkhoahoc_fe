@@ -14,9 +14,9 @@
                 <label class="danh-gia-label">Chọn Khóa Học</label>
                 <select v-model="danhGia.khoa_hoc" class="form-control" required>
                     <option value="" disabled>-- Chọn khóa học --</option>
-                    <option v-for="khoa in list_khoa_hoc" :key="khoa.id" :value="khoa.id">
-                        {{ khoa.title ? khoa.title : khoa.ten_khoa_hoc }} -
-                        {{ khoa.loai === 'paid' ? 'Mất phí' : 'Miễn phí' }}
+                    <option v-for="(value, index) in list_khoa_hoc" :key="index" :value="value.id">
+                        {{ value.title ? value.title : value.ten_khoa_hoc }} -
+                        {{ value.loai === 'paid' ? 'Mất phí' : 'Miễn phí' }}
                     </option>
                 </select>
             </div>
@@ -65,8 +65,8 @@ export default {
         };
     },
     mounted() {
-        this.loadDataKHFR().then(() => this.loadDataLKH());
         this.loadUserInfo();
+        this.loadDataLKH();
     },
     methods: {
         onFileChange(event) {
@@ -115,33 +115,22 @@ export default {
                 this.isLoading = false;
             }
         },
-        async loadDataKHFR() {
-            try {
-                const res = await axios.get("http://127.0.0.1:8000/api/admin/khoa-hoc-free/data", {
-                    headers: {
-                        Authorization: 'Bearer ' + localStorage.getItem("key_admin")
-                    }
-                });
-                this.list_khoa_hoc = res.data.data.map(khoa => ({
-                    ...khoa,
-                    loai: "free"
-                }));
-            } catch (error) {
-                console.error("Lỗi khi lấy danh sách khóa học miễn phí:", error);
-            }
-        },
         async loadDataLKH() {
             try {
-                const res = await axios.get("http://127.0.0.1:8000/api/admin/loai-khoa-hoc/data", {
-                    headers: {
-                        Authorization: 'Bearer ' + localStorage.getItem("key_admin")
-                    }
-                });
-                const khoaHocMatPhi = res.data.data1.map(khoa => ({
-                    ...khoa,
-                    loai: "paid"
-                }));
-                this.list_khoa_hoc = [...this.list_khoa_hoc, ...khoaHocMatPhi];
+                const res = await axios.get("http://127.0.0.1:8000/api/khach-hang/loai-khoa-hoc/data");
+                const data = Array.isArray(res.data.data) ? res.data.data : [];
+                const data_2 = Array.isArray(res.data.data_2) ? res.data.data_2 : [];
+
+                this.list_khoa_hoc = [
+                    ...data.map(khoa => ({
+                        ...khoa,
+                        loai: "paid", // Giả sử loại này có phí
+                    })),
+                    ...data_2.map(khoa => ({
+                        ...khoa,
+                        loai: "free",
+                    }))
+                ];
             } catch (error) {
                 console.error("Lỗi khi lấy danh sách khóa học mất phí:", error);
             }
@@ -178,5 +167,5 @@ export default {
 </script>
 
 <style scoped>
-@import '@/assets/css/commonStyles.css';    
+@import '@/assets/css/commonStyles.css';
 </style>

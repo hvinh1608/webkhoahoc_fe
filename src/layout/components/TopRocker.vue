@@ -1,11 +1,13 @@
 <template>
     <div class="topbar d-flex align-items-center">
         <nav class="navbar navbar-expand">
-            <div class="topbar-logo-header">
-                <div class="">
-                    <h4 class="logo-text">Rocker</h4>
+            <router-link to="/">
+                <div class="topbar-logo-header d-flex align-items-center">
+                    <img src="https://i.pinimg.com/736x/78/4d/19/784d19602be7f1d070b6a13001b7fc5c.jpg" class="logo-icon" style="width: 70px;"
+                        alt="logo icon">
+                    <h4 class="mt-3 ms-2">DZFULLSTACK</h4>
                 </div>
-            </div>
+            </router-link>
             <div class="mobile-toggle-menu"><i class='bx bx-menu'></i></div>
             <div class="search-bar flex-grow-1">
                 <div class="position-relative search-bar-box">
@@ -21,7 +23,7 @@
             </div>
             <div class="user-box dropdown">
                 <a class="d-flex align-items-center nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="https://dzfullstack.com/assets/images/logo-img.png" class="user-img" alt="user avatar">
+                    <img src="https://i.pinimg.com/736x/78/4d/19/784d19602be7f1d070b6a13001b7fc5c.jpg" class="user-img" alt="user avatar">
                     <div class="user-info ps-3">
                         <p class="user-name mb-0">{{ user.name }}</p>
                         <p class="designattion mb-0">{{ userRole }}</p>

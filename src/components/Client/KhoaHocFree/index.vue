@@ -47,7 +47,7 @@
             </h4>
 
             <div class="d-flex justify-content-center">
-                <button v-on:click="confirmDangKyKhoaHoc()" class="btn-register-free">
+                <button v-on:click="confirmDangKyKhoaHoc(id_khoa_hoc_free)" class="btn-register-free">
                     ĐĂNG KÝ HỌC
                 </button>
             </div>
@@ -95,7 +95,7 @@ export default {
             }).format(number,)
         },
 
-        confirmDangKyKhoaHoc() {
+        confirmDangKyKhoaHoc(id_khoa_hoc_free) {
             Swal.fire({
                 title: 'Bạn có chắc chắn?',
                 text: "Bạn có muốn đăng ký khóa học này không?",
@@ -103,13 +103,37 @@ export default {
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Đăng ký'
+                confirmButtonText: 'Đăng ký',
+                cancelButtonText: 'Hủy'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    this.dangKyKhoaHoc();
+                    var payload = {
+                        id_khoa_hoc: id_khoa_hoc_free,
+                    };
+
+                    axios
+                        .post('http://127.0.0.1:8000/api/khach-hang/khoa-hoc/dang-ki', payload, {
+                            headers: {
+                                Authorization: 'Bearer ' + localStorage.getItem("key_khach_hang"),
+                            },
+                        })
+                        .then((res) => {
+                            if (res.data.status == 1) {
+                                this.isRegistered = true;
+                                localStorage.setItem(`isRegistered_${this.id_khoa_hoc_free}`, 'true');
+                                this.$toast.success(res.data.message);
+                            } else {
+                                this.$toast.error(res.data.message);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Lỗi đăng ký khóa học:", error);
+                            this.$toast.error("Đã xảy ra lỗi, vui lòng thử lại!");
+                        });
                 }
-            })
+            });
         },
+
 
         dangKyKhoaHoc() {
             if (!this.chi_tiet_khoa_hoc_free || !this.chi_tiet_khoa_hoc_free.id) {

@@ -3,7 +3,7 @@
         <nav class="navbar navbar-expand">
             <router-link to="/">
                 <div class="topbar-logo-header d-flex align-items-center">
-                    <img src="https://dzfullstack.com/assets/images/logo-img.png" class="logo-icon" style="width: 70px;"
+                    <img src="https://i.pinimg.com/736x/78/4d/19/784d19602be7f1d070b6a13001b7fc5c.jpg" class="logo-icon" style="width: 70px;"
                         alt="logo icon">
                     <h4 class="mt-3 ms-2">DZFULLSTACK</h4>
                 </div>
@@ -56,7 +56,7 @@
                 <template v-if="user.check">
                     <a class="d-flex align-items-center nav-link dropdown-toggle dropdown-toggle-nocaret" href="#"
                         role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="https://dzfullstack.com/assets/images/logo-img.png" class="user-img"
+                        <img src="https://i.pinimg.com/736x/78/4d/19/784d19602be7f1d070b6a13001b7fc5c.jpg" class="user-img"
                             alt="user avatar">
                         <div class="user-info ps-3">
                             <p class="user-name mt-1 mb-0">{{ user.name }}</p>
