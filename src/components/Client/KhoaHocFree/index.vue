@@ -122,6 +122,7 @@ export default {
                                 this.isRegistered = true;
                                 localStorage.setItem(`isRegistered_${this.id_khoa_hoc_free}`, 'true');
                                 this.$toast.success(res.data.message);
+                                this.$router.push('/danh-sach-khoa-hoc');
                             } else {
                                 this.$toast.error(res.data.message);
                             }

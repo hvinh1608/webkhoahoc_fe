@@ -1,7 +1,7 @@
 <template>
     <div class="topbar d-flex align-items-center">
         <nav class="navbar navbar-expand">
-            <router-link to="/">
+            <router-link to="">
                 <div class="topbar-logo-header d-flex align-items-center">
                     <img src="https://i.pinimg.com/736x/78/4d/19/784d19602be7f1d070b6a13001b7fc5c.jpg" class="logo-icon" style="width: 70px;"
                         alt="logo icon">
