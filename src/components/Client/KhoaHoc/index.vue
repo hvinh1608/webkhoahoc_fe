@@ -21,7 +21,7 @@
                                 </button>
                             </h2>
                             <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
-                                data-bs-parent="#accordionExample" style="">
+                                data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
                                     <template v-for="(value, index) in list_bai_hoc" :key="index">
                                         <template v-if="check_mua_khoa_hoc === 1">
@@ -48,13 +48,18 @@
         <div class="col-lg-6">
             <iframe width="100%" height="515" style="border-radius: 20px;" v-bind:src="link_video" frameborder="0"
                 allowfullscreen></iframe>
-            <h4 class="text-danger mt-2 text-center">{{ formatVND(chi_tiet_khoa_hoc.gia_ban) }}</h4>
+            <h4 class="text-danger mt-2 text-center">
+                {{ isRegistered ? formatVND(0) : formatVND(chi_tiet_khoa_hoc.gia_ban) }}
+            </h4>
             <div class="d-flex justify-content-center">
-                <button class="btn-register" v-on:click="confirmMuaKhoaHoc()">
+                <button class="btn-register" v-on:click="confirmMuaKhoaHoc()" v-if="!isRegistered">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24">
                         <path d="m18 0 8 12 10-8-4 20H4L0 4l10 8 8-12z"></path>
                     </svg>
                     ĐĂNG KÝ HỌC
+                </button>
+                <button class="btn-register" v-if="isRegistered" disabled>
+                    ĐÃ ĐĂNG KÝ
                 </button>
             </div>
 
@@ -80,7 +85,8 @@ export default {
             chi_tiet_khoa_hoc: {},
             list_bai_hoc: [],
             link_video: "",
-            check_mua_khoa_hoc: false
+            check_mua_khoa_hoc: false,
+            isRegistered: false
         }
     },
     mounted() {
@@ -100,6 +106,9 @@ export default {
                 })
                 .then((res) => {
                     this.check_mua_khoa_hoc = res.data.status;
+                    if (this.check_mua_khoa_hoc === 1) {
+                        this.isRegistered = true;
+                    }
                 }).catch((res) => {
                     this.$toast.error('Vui lòng đăng nhập để mua khóa học');
                 })
@@ -134,6 +143,7 @@ export default {
                 .then((res) => {
                     if (res.data.status == 1) {
                         this.$toast.success(res.data.message)
+                        this.isRegistered = true;
                         this.$router.push('/danh-sach-khoa-hoc')
                     }
                     else if (res.data.status == 2) {
@@ -148,7 +158,7 @@ export default {
                 })
         },
         formatVND(number) {
-            return new Intl.NumberFormat('vi-VI', { style: 'currency', currency: 'VND' }).format(number,)
+            return new Intl.NumberFormat('vi-VI', { style: 'currency', currency: 'VND' }).format(number);
         },
         loadChiTietKhoaHoc() {
             axios
@@ -161,7 +171,7 @@ export default {
                     }
                     else {
                         this.$toast.error(res.data.message);
-                        this.$toast.push('/');
+                        this.$router.push('/');
                     }
                 });
         }
@@ -169,4 +179,5 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+</style>

@@ -6,7 +6,7 @@
 
         <div v-if="isOpen" class="chatbox">
             <div class="chatbox-header">
-                <img src="https://play-lh.googleusercontent.com/hk5zZ8Xup9HgoP-Xxgoav8geLOAPn2X_a8_fcYJA02uYt8CbxQBkkMChi5gbq5goNA"
+                <img src="https://img.freepik.com/free-vector/chatbot-chat-message-vectorart_78370-4104.jpg?semt=ais_hybrid&w=740"
                     alt="Chat Icon" class="chatbox-icon" />
                 <span class="chatbox-title">Chatbot Hỗ trợ</span>
             </div>

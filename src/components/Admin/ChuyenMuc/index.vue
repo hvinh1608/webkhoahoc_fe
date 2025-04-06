@@ -178,7 +178,11 @@ export default {
         },
         themMoiChuyenMuc() {
             baseRequest
-                .post("chuyen-muc/create", this.chuyen_muc_create)
+                .post("chuyen-muc/create", this.chuyen_muc_create , {
+                    headers : {
+                        Authorization: 'Bearer ' + localStorage.getItem("key_admin")
+                    }
+                })
                 .then((res) => {
                     if (res.data.status == true) {
                         toaster.success(res.data.message)
@@ -190,7 +194,7 @@ export default {
         },
         xoaChuyenMuc() {
             baseRequest
-                .delete("chuyen-muc/delete/" + this.id_can_xoa)
+                .post("chuyen-muc/delete/" + this.id_can_xoa)
                 .then((res) => {
                     if (res.data.status == true) {
                         toaster.success(res.data.message)
@@ -202,7 +206,7 @@ export default {
         },
         capNhatChuyenMuc() {
             baseRequest
-                .put("chuyen-muc/update", this.chuyen_muc_update)
+                .post("chuyen-muc/update", this.chuyen_muc_update)
                 .then((res) => {
                     if (res.data.status == true) {
                         toaster.success(res.data.message)
@@ -214,7 +218,7 @@ export default {
         },
         doiTrangThai(xxx) {
             baseRequest
-                .put('chuyen-muc/doi-trang-thai', xxx)
+                .post('chuyen-muc/doi-trang-thai', xxx)
                 .then((res) => {
                     if (res.data.status == true) {
                         toaster.success(res.data.message)

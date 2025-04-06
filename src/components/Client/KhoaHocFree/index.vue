@@ -47,8 +47,15 @@
             </h4>
 
             <div class="d-flex justify-content-center">
-                <button v-on:click="confirmDangKyKhoaHoc(id_khoa_hoc_free)" class="btn-register-free">
+                <!-- Nếu chưa đăng ký thì hiển thị nút "Đăng ký học" -->
+                <button v-if="!isRegistered" v-on:click="confirmDangKyKhoaHoc(id_khoa_hoc_free)"
+                    class="btn-register-free">
                     ĐĂNG KÝ HỌC
+                </button>
+
+                <!-- Nếu đã đăng ký thì hiển thị thông báo "Đã đăng ký" -->
+                <button v-else class="btn-register-free" disabled>
+                    ĐÃ ĐĂNG KÝ
                 </button>
             </div>
             <div class="d-flex justify-content-between mt-3">
@@ -82,7 +89,7 @@ export default {
     methods: {
         playVideo(value) {
             if (!this.isRegistered) {
-                this.$toast.error("Vui lòng ĐĂNG KÝ HỌC để xem bài học!");
+                // this.$toast.error("Vui lòng ĐĂNG KÝ HỌC để xem bài học!");
                 return;
             }
             this.link_video = value.link_bai_hoc;
@@ -185,7 +192,7 @@ export default {
                         this.chi_tiet_khoa_hoc_free = res.data.data;
                         this.list_bai_hoc = res.data.list_bai_hoc;
                         this.link_video = this.chi_tiet_khoa_hoc_free.link_gioi_thieu;
-                        this.isRegistered = res.data.is_registered || localStorage.getItem(`isRegistered_${this.id_khoa_hoc_free}`) === 'true'; // Cập nhật trạng thái đăng ký từ API hoặc localStorage
+                        this.isRegistered = res.data.is_registered || localStorage.getItem(`isRegistered_${this.id_khoa_hoc_free}`) === 'true';
                     } else {
                         this.$toast.error(res.data.message);
                         this.$router.push('/');

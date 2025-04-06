@@ -404,7 +404,8 @@ export default {
         loadBaiViet() {
             axios.get("http://127.0.0.1:8000/api/bai-viet/data-open")
                 .then((res) => {
-                    this.list_bai_viet = res.data.data;
+                    // Trộn các bài viết ngẫu nhiên
+                    this.list_bai_viet = this.shuffleArray(res.data.data);
                 });
         },
         loadKhoaHoc() {
@@ -436,7 +437,11 @@ export default {
             this.expandedFree = !this.expandedFree;
         },
         toggleBaiViet() {
-            this.limitBaiViet = this.expandedBaiViet ? 3 : this.list_bai_viet.length;
+            if (this.limitBaiViet === 3) {
+                this.limitBaiViet = 6;
+            } else {
+                this.limitBaiViet = 3;
+            }
             this.expandedBaiViet = !this.expandedBaiViet;
         },
         toggleDanhGias() {
@@ -461,6 +466,9 @@ export default {
         },
         getAvatarUrl(avatar) {
             return `http://127.0.0.1:8000/storage/${avatar}`;
+        },
+        shuffleArray(array) {
+            return array.sort(() => Math.random() - 0.5);
         },
     },
 };

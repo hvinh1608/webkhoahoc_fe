@@ -1,7 +1,7 @@
-import { createRouter, createWebHistory } from "vue-router"; // cài vue-router: npm install vue-router@next --save
+import { createRouter, createWebHistory } from "vue-router";
 import checkAdminLogin from "./checkAdminLogin";
 import checkKhachHangLogin from "./checkKhachHangLogin";
-import ChiTietBaiViet from "../components/Client/ChiTietBaiViet/index.vue"; // Import component ChiTietBaiViet
+import ChiTietBaiViet from "../components/Client/ChiTietBaiViet/index.vue";
 const routes = [
   {
     path: "/",

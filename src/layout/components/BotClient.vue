@@ -66,8 +66,7 @@
             <div class="container text-center text-md-start mt-5">
                 <div class="row mt-3">
                     <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
-                        <h6 class="text-uppercase fw-bold">
-                            DZFullStack</h6>
+                        <h6 class="text-uppercase fw-bold" style="color: orange;">DZFullStack</h6>
                         <hr class=" mt-0 d-inline-block mx-auto"
                             style="width: 60px; background-color: #7c4dff; height: 2px" /><br>
                         <div class="text-center mb-2">
@@ -75,13 +74,18 @@
                                 style="width: 100px; height: auto;" alt="">
                         </div>
                         <p>
-                            Here you can use rows and columns to organize your footer
-                            content. Lorem ipsum dolor sit amet, consectetur adipisicing
-                            elit.
+                            Ở đây, Cung cấp các khóa học chất lượng, giúp người học nâng cao kỹ năng và kiến thức một
+                            cách
+                            hiệu quả. Đăng ký ngay để nhận thông tin mới nhất về các khóa học và chương trình khuyến
+                            mãi.
                         </p>
+                        <form class="subscribe-form">
+                            <input type="email" placeholder="example@mail.com" class="subscribe-input">
+                            <button class="subscribe-btn text-nowrap">Đăng Ký</button>
+                        </form>
                     </div>
                     <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
-                        <h6 class="text-uppercase fw-bold">Products</h6>
+                        <h6 class="text-uppercase fw-bold" style="color: orange;">Products</h6>
                         <hr class="mb-4 mt-0 d-inline-block mx-auto"
                             style="width: 60px; background-color: #7c4dff; height: 2px" />
                         <p>
@@ -98,7 +102,7 @@
                         </p>
                     </div>
                     <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
-                        <h6 class="text-uppercase fw-bold">Useful links</h6>
+                        <h6 class="text-uppercase fw-bold" style="color: orange;">Useful links</h6>
                         <hr class="mb-4 mt-0 d-inline-block mx-auto"
                             style="width: 60px; background-color: #7c4dff; height: 2px" />
                         <p>
@@ -108,19 +112,19 @@
                             <a href="#!" class="text-white">Instagram</a>
                         </p>
                         <p>
-                            <a href="#!" class="text-white">Tripavisor</a>
+                            <a href="#!" class="text-white">Email</a>
                         </p>
                         <p>
                             <a href="#!" class="text-white">Twitter</a>
                         </p>
                     </div>
                     <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
-                        <h6 class="text-uppercase fw-bold">Contact</h6>
+                        <h6 class="text-uppercase fw-bold" style="color: orange;">Contact</h6>
                         <hr class="mb-4 mt-0 d-inline-block mx-auto"
                             style="width: 60px; background-color: #7c4dff; height: 2px" />
-                        <p><i class="fas fa-home mr-3"></i>32 Xuân Diệu, Hải Châu, Đà Nẵng</p>
-                        <p><i class="fas fa-envelope mr-3"></i> dzfullstack@gmai.com</p>
-                        <p><i class="fas fa-phone mr-3"></i> + 0905523543</p>
+                        <p><i class="fas fa-home mr-3"></i>53 Nguyễn Hữu Thận, Thanh Khê, Đà Nẵng</p>
+                        <p><i class="fas fa-envelope mr-3"></i> hvinh.job@gmail.com</p>
+                        <p><i class="fas fa-phone mr-3"></i> + 0335446435</p>
                         <p><i class="fas fa-print mr-3"></i> + 0376659652</p>
                     </div>
                 </div>
@@ -137,6 +141,51 @@ export default {
 
 }
 </script>
-<style>
+<style scoped>
+.subscribe-form {
+    --main-focus: #f09b2d;
+    --font-color: #323232;
+    --font-color-sub: #666;
+    --bg-color: #fff;
+    --main-color: #323232;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    display: flex;
+    flex-direction: row;
+    width: 250px;
+    height: 35px;
+    border-radius: 5px;
+    box-shadow: 4px 4px var(--main-color);
+}
 
+.subscribe-input {
+    width: 100%;
+    height: 100%;
+    padding: 5px 10px;
+    border: 2px solid var(--main-color);
+    border-right: 0;
+    border-radius: 5px 0 0 5px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--font-color);
+    background: var(--bg-color);
+}
+
+.subscribe-btn {
+    width: 100px;
+    height: 100%;
+    border: 2px solid var(--main-focus);
+    border-radius: 0 5px 5px 0;
+    background-color: var(--main-focus);
+    font-size: 15px;
+    letter-spacing: 1px;
+    font-weight: 500;
+    color: var(--bg-color);
+    cursor: pointer;
+}
+
+.subscribe-input:focus {
+    outline: none;
+    border: 2px solid var(--main-focus);
+    border-right: 0;
+}
 </style>
