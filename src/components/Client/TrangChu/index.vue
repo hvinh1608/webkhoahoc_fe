@@ -305,7 +305,7 @@
                     <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-3 row-cols-xxl-3 product-grid">
                         <template v-for="(v, k) in displayedBaiViet" :key="k">
                             <div class="col d-flex">
-                                <router-link :to="`/bai-viet/${v.id}`" class="card-link">
+                                <router-link :to="`/chi-tiet-bai-viet/${v.id}`" class="card-link">
                                     <div class="card rounded-4 flex-fill">
                                         <img :src="v.hinh_anh" class="card-img-top"
                                             style="border-top-left-radius: 20px; border-top-right-radius: 20px; height: 300px;"

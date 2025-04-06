@@ -20,6 +20,12 @@
                         :editor="editor"
                         :config="editorConfig"
                     />
+                    <label class="mt-2">Chuyên Mục</label>
+                        <select v-model="create.id_chuyen_muc" class="form-control mt-2">
+                            <template v-for="(v, k) in ds_chuyen_muc" :key="k">
+                                <option v-bind:value="v.id">{{ v.ten_chuyen_muc }}</option>
+                            </template>
+                        </select>
                     <label class="mt-2">Tình Trạng</label>
                     <select v-model="create.tinh_trang" class="form-control mt-2">
                         <option value="1">Hoạt Động</option>
@@ -62,6 +68,7 @@
                                     <th>Hình Ảnh</th>
                                     <th>Mô Tả Ngắn</th>
                                     <th>Nội Dung</th>
+                                    <th>Chuyên Mục</th>
                                     <th>Tình Trạng</th>
                                     <th>Action</th>
                                 </tr>
@@ -80,6 +87,7 @@
                                             <i v-on:click="Object.assign(edit, value)" data-bs-toggle="modal"
                                                 data-bs-target="#icon" class="fa-solid fa-circle-info fa-2x"></i>
                                         </td>
+                                        <td class="align-middle text-center">{{ value.ten_chuyen_muc }}</td>
                                         <td class="align-middle text-center">
                                             <button v-on:click="doiTrangThai(value)" v-if="value.tinh_trang == 1"
                                                 class="btn btn-success me-2">Hoạt
@@ -195,6 +203,7 @@
 </template>
 <script>
 import axios from 'axios'
+import baseRequest from '../../../core/baseRequest';
 import { ClassicEditor, Bold, Essentials, Italic, Mention, Paragraph, Undo, Heading, BlockQuote, Font, Link, List, Alignment, Highlight, Image, FileRepository } from 'ckeditor5';
 import { Ckeditor } from '@ckeditor/ckeditor5-vue';
 import 'ckeditor5/ckeditor5.css';
@@ -211,6 +220,7 @@ export default {
                 'mo_ta_ngan': "",
                 'noi_dung': "",
                 'tinh_trang': "",
+                'id_chuyen_muc': "",
             },
             del: {
                 'id': "",
@@ -223,8 +233,10 @@ export default {
                 'mo_ta_ngan': "",
                 'noi_dung': "",
                 'tinh_trang': "",
+                'id_chuyen_muc': "",
             },
             list: [],
+            ds_chuyen_muc: [],
             search : {},
             editor: ClassicEditor,
             editorConfig: {
@@ -250,8 +262,19 @@ export default {
     },
     mounted() {
         this.loadData();
+        this.layDuLieuChuyenMuc();
     },
     methods: {
+        layDuLieuChuyenMuc() {
+            baseRequest
+                .get('chuyen-muc/data')
+                .then((res) => {
+                    if (res.data.status == false) {
+                        toaster.error(res.data.message)
+                    }
+                    this.ds_chuyen_muc = res.data.chuyen_muc;
+                })
+        },
         timKiem() {
             axios
                 .post("http://127.0.0.1:8000/api/admin/bai-viet/tim-kiem", this.search, {
@@ -353,6 +376,7 @@ export default {
                             'mo_ta_ngan': "",
                             'noi_dung': "",
                             'tinh_trang': "",
+                            'id_chuyen_muc': "",
                         }
                     } else {                    
                         this.$toast.error(res.data.message);

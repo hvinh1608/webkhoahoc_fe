@@ -14,7 +14,7 @@
                     <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 row-cols-xl-4 row-cols-xxl-4 product-grid">
                         <template v-for="(value, index) in displayedArticles" :key="index">
                             <div class="col d-flex">
-                                <router-link :to="`/bai-viet/${value.id}`" class="card-link">
+                                <router-link :to="`/chi-tiet-bai-viet/${value.id}`" class="card-link">
                                     <div class="card rounded-4 flex-fill">
                                         <img :src="value.hinh_anh" class="card-img-top"
                                             style="border-top-left-radius: 20px; border-top-right-radius: 20px; height: 160px;"
@@ -53,41 +53,50 @@
 import axios from 'axios';
 
 export default {
-    data() {
-        return {
-            list_bai_viet: [],
-            limit: 4,
-            expanded: false
-        };
+  props: ['slug_chuyen_muc'],
+  data() {
+    return {
+      list_bai_viet: [],
+      limit: 4,
+      expanded: false,
+    };
+  },
+  computed: {
+    displayedArticles() {
+      return this.list_bai_viet.slice(0, this.limit);
     },
-    computed: {
-        displayedArticles() {
-            return this.list_bai_viet.slice(0, this.limit);
-        }
-    },
-    mounted() {
+  },
+  mounted() {
+    this.loadBaiViet();
+  },
+  watch: {
+    slug_chuyen_muc(newSlug, oldSlug) {
+      if (newSlug !== oldSlug) {
         this.loadBaiViet();
+      }
     },
-    methods: {
-        loadBaiViet() {
-            axios.get("http://127.0.0.1:8000/api/bai-viet/data-open")
-                .then((res) => {
-                    this.list_bai_viet = res.data.data;
-                });
-        },
-        toggleLimit() {
-            this.expanded = !this.expanded;
-            this.limit = this.expanded ? this.list_bai_viet.length : 4;
-        },
-        truncateText(text, length) {
-            if (!text) return '';
-            const plainText = text.replace(/<[^>]*>/g, '');
-            return plainText.length > length ? plainText.substring(0, length) + '...' : plainText;
-        }
-
-    }
+  },
+  methods: {
+    loadBaiViet() {
+      axios
+        .get("http://127.0.0.1:8000/api/bai-viet/data-open/" + this.slug_chuyen_muc)
+        .then((res) => {
+          this.list_bai_viet = res.data.data;
+        });
+    },
+    toggleLimit() {
+      this.expanded = !this.expanded;
+      this.limit = this.expanded ? this.list_bai_viet.length : 4;
+    },
+    truncateText(text, length) {
+      if (!text) return '';
+      const plainText = text.replace(/<[^>]*>/g, '');
+      return plainText.length > length ? plainText.substring(0, length) + '...' : plainText;
+    },
+  },
 };
 </script>
+
 
 <style scoped>
 @import '@/assets/css/commonStyles.css';

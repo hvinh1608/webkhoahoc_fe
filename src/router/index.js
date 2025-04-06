@@ -32,12 +32,13 @@ const routes = [
     props: true,
   },
   {
-    path: "/bai-viet",
+    path: "/bai-viet/:slug_chuyen_muc",
     component: () => import("../components/Client/BaiViet/index.vue"),
     meta: { layout: "client" },
+    props: true,
   },
   {
-    path: '/bai-viet/:id',
+    path: '/chi-tiet-bai-viet/:id',
     name: 'ChiTietBaiViet',
     component: ChiTietBaiViet,
     props: true,  
@@ -167,6 +168,11 @@ const routes = [
   {
     path: "/admin/bai-viet",
     component: () => import("../components/Admin/BaiViet/index.vue"),
+    beforeEnter: checkAdminLogin,
+  },
+  {
+    path: "/admin/chuyen-muc",
+    component: () => import("../components/Admin/ChuyenMuc/index.vue"),
     beforeEnter: checkAdminLogin,
   },
   {

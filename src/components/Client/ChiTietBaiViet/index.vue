@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     loadChiTietBaiViet() {
-      axios.get(`http://127.0.0.1:8000/api/bai-viet/${this.id}`)
+      axios.get(`http://127.0.0.1:8000/api/chi-tiet-bai-viet/${this.id}`)
         .then((res) => {
           this.baiViet = res.data.data;
         })

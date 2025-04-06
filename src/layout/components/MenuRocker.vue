@@ -48,15 +48,25 @@
                     </li>
                 </ul>
             </li>
-            <li class="nav-item">
-                <router-link to="/admin/bai-viet">
-                    <a class="nav-link" href="/admin/bai-viet">
-                        <div class="parent-icon"><i class="fa-solid fa-newspaper"></i>
-                        </div>
-                        <div class="menu-title">Bài Viết</div>
-                    </a>
-                </router-link>
-            </li>
+            <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <div class="parent-icon"><i class="fa-solid fa-newspaper"></i></div>
+        <div class="menu-title">Nội Dung</div>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <li>
+            <router-link to="/admin/bai-viet">
+                <a class="dropdown-item" href="/admin/bai-viet">Bài Viết</a>
+            </router-link>
+        </li>
+        <li>
+            <router-link to="/admin/chuyen-muc">
+                <a class="dropdown-item" href="/admin/chuyen-muc">Chuyên Mục</a>
+            </router-link>
+        </li>
+    </ul>
+</li>
+
             <li class="nav-item">
                 <router-link to="/admin/danh-gia">
                     <a class="nav-link" href="/admin/danh-gia">
