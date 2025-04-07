@@ -79,9 +79,13 @@
                             hiệu quả. Đăng ký ngay để nhận thông tin mới nhất về các khóa học và chương trình khuyến
                             mãi.
                         </p>
-                        <form class="subscribe-form">
-                            <input type="email" placeholder="example@mail.com" class="subscribe-input">
-                            <button class="subscribe-btn text-nowrap">Đăng Ký</button>
+                        <form class="subscribe-form" @submit.prevent="dangKyNhanThongTin">
+                            <input v-model="email" type="email" placeholder="example@mail.com"
+                                class="subscribe-input" />
+                            <button class="subscribe-btn text-nowrap" :disabled="isLoading">
+                                <span v-if="isLoading" class="spinner"></span>
+                                <span v-else>Đăng Ký</span>
+                            </button>
                         </form>
                     </div>
                     <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
@@ -137,9 +141,48 @@
     </footer>
 </template>
 <script>
-export default {
+import axios from 'axios';
 
-}
+export default {
+    data() {
+        return {
+            email: '',
+            isLoading: false, 
+        };
+    },
+    methods: {
+        dangKyNhanThongTin() {
+            if (!this.email) {
+                this.$toast.error('Vui lòng nhập email!');
+                return;
+            }
+
+            this.isLoading = true; 
+
+            axios
+                .post('http://127.0.0.1:8000/api/nhan-thong-tin', { email: this.email })
+                .then((res) => {
+                    if (res.data.status) {
+                        this.$toast.success(res.data.message);
+                        this.email = '';
+                    } else {
+                        this.$toast.error('Không thể đăng ký nhận thông tin.');
+                    }
+                })
+                .catch((err) => {
+                    if (err.response && err.response.status === 422) {
+                        const errors = Object.values(err.response.data.errors);
+                        this.$toast.error(errors[0][0]);
+                    } else {
+                        this.$toast.error('Có lỗi xảy ra.');
+                    }
+                })
+                .finally(() => {
+                    this.isLoading = false; 
+                });
+        },
+    },
+};
 </script>
 <style scoped>
 .subscribe-form {
@@ -187,5 +230,26 @@ export default {
     outline: none;
     border: 2px solid var(--main-focus);
     border-right: 0;
+}
+
+.spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top: 2px solid white;
+    /* Màu của vòng quay */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 </style>
