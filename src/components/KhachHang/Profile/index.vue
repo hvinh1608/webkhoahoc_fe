@@ -196,7 +196,7 @@
                                         Bạn phải quét mã QR để thanh toán nạp tiền vào tài khoản
                                     </div>
                                     <img v-if="qrVisible" :src="link_qr" class="img-fluid">
-                                    <div v-if="qrVisible" class="alert alert-info" role="alert">
+                                    <div v-if="qrVisible" class="alert alert-danger" role="alert">
                                         Mã QR sẽ hết hạn sau: {{ formattedCountdown }}
                                     </div>
                                     <div v-else class="alert alert-warning" role="alert">
@@ -208,7 +208,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                 </div>
             </div>
         </div>
@@ -227,6 +227,7 @@ export default {
             doi_mat_khau: {},
             qrVisible: true,
             countdown: 300,
+            countdownInterval: null,
         }
     },
     mounted() {
@@ -305,37 +306,43 @@ export default {
                 })
         },
         xacNhanNapTien() {
-            var payload = {
-                'so_tien_nap': this.so_tien_nap
-            }
-            axios
-                .post("http://127.0.0.1:8000/api/khach-hang/xac-nhan-nap-tien", payload, {
-                    headers: {
-                        Authorization: 'Bearer ' + localStorage.getItem("key_khach_hang")
-                    }
-                })
-                .then((res) => {
-                    if (res.data.status) {
-                        this.$toast.success(res.data.message)
-                        var noi_dung_chuyen_tien = res.data.noi_dung_chuyen_tien;
-                        this.link_qr = "https://img.vietqr.io/image/MB-56700112233-compact2.png?amount=" +
-                            this.so_tien_nap +
-                            "&addInfo=" + encodeURIComponent(noi_dung_chuyen_tien) +
-                            "&accountName=" + encodeURIComponent("Trần Ngô Hồng Vinh");
+        var payload = {
+            'so_tien_nap': this.so_tien_nap
+        }
+        axios
+            .post("http://127.0.0.1:8000/api/khach-hang/xac-nhan-nap-tien", payload, {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem("key_khach_hang")
+                }
+            })
+            .then((res) => {
+                if (res.data.status) {
+                    this.$toast.success(res.data.message)
+                    var noi_dung_chuyen_tien = res.data.noi_dung_chuyen_tien;
+                    this.link_qr = "https://img.vietqr.io/image/MB-56700112233-compact2.png?amount=" +
+                        this.so_tien_nap +
+                        "&addInfo=" + encodeURIComponent(noi_dung_chuyen_tien) +
+                        "&accountName=" + encodeURIComponent("Trần Ngô Hồng Vinh");
 
-                        this.qrVisible = true;
-                        this.countdown = 300;
-                        var interval = setInterval(() => {
-                            this.countdown--;
-                            if (this.countdown === 0) {
-                                clearInterval(interval);
-                                this.qrVisible = false;
-                            }
-                        }, 1000);
+                    this.qrVisible = true;
+                    this.countdown = 300;
 
+                    // Xóa interval cũ nếu tồn tại
+                    if (this.countdownInterval) {
+                        clearInterval(this.countdownInterval);
                     }
-                })
-        },
+
+                    // Tạo interval mới
+                    this.countdownInterval = setInterval(() => {
+                        this.countdown--;
+                        if (this.countdown === 0) {
+                            clearInterval(this.countdownInterval);
+                            this.qrVisible = false;
+                        }
+                    }, 1000);
+                }
+            })
+    },
         formatVND(number) {
             return new Intl.NumberFormat('vi-VI', {
                 style: 'currency',

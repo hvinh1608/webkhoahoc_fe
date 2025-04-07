@@ -40,8 +40,11 @@
                   </div>
                   <div class="col-12">
                     <div class="d-grid">
-                      <button v-on:click="DangKyTaiKhoan()" type="button" class="btn btn-primary"><i
-                          class="fa-regular fa-user"></i>Đăng Ký</button>
+                      <button v-on:click="DangKyTaiKhoan" type="button" class="btn btn-primary" :disabled="loading">
+                        <i v-if="loading" class="fas fa-spinner fa-spin me-2"></i>
+                        <i v-else class="fa-regular fa-user me-2"></i>
+                        Đăng Ký
+                      </button>
                     </div>
                   </div>
                   <div class="col-12">
@@ -64,11 +67,10 @@
 </template>
 <script>
 import axios from 'axios';
-
-
 export default {
   data() {
     return {
+      loading: false,
       create: {
         ho_va_ten: "",
         email: "",
@@ -84,11 +86,11 @@ export default {
   },
   methods: {
     DangKyTaiKhoan() {
+      this.loading = true;
       axios
         .post("http://127.0.0.1:8000/api/khach-hang/dang-ky", this.create)
         .then((res) => {
           if (res.data.status == 1) {
-            console.log(res);
             this.$toast.success(res.data.message);
             this.create = {
               ho_va_ten: "",
@@ -102,10 +104,13 @@ export default {
         })
         .catch((res) => {
           const list = Object.values(res.response.data.errors);
-          list.forEach((v, i) => {
+          list.forEach((v) => {
             this.$toast.error(v[0]);
           });
         })
+        .finally(() => {
+          this.loading = false;
+        });
     },
   },
 }
