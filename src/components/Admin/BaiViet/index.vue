@@ -264,6 +264,11 @@ export default {
         this.loadData();
         this.layDuLieuChuyenMuc();
     },
+    watch: {
+        'create.tieu_de'(newVal) {
+            this.create.slug_tieu_de = this.toSlug(newVal);
+        }
+    },
     methods: {
         layDuLieuChuyenMuc() {
             baseRequest
@@ -399,6 +404,16 @@ export default {
                 .then((res) => {
                     this.list = res.data.data;
                 })
+        },
+        toSlug(text) {
+            return text
+                .toLowerCase()
+                .normalize('NFD')                      
+                .replace(/[\u0300-\u036f]/g, '')       
+                .replace(/[^a-z0-9\s-]/g, '')          
+                .replace(/\s+/g, '-')                 
+                .replace(/-+/g, '-')                  
+                .replace(/^-+|-+$/g, '');            
         },
     }
 }

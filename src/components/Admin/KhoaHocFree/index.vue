@@ -238,6 +238,11 @@ export default {
     mounted() {
         this.loadData();
     },
+    watch: {
+        'create.title'(newVal) {
+            this.create.slug = this.toSlug(newVal);
+        }
+    },
     methods: {
         showDescription(description) {
             this.description = description;
@@ -382,6 +387,16 @@ export default {
                     console.log(res);
                     this.list = res.data.data;
                 });
+        },
+        toSlug(text) {
+            return text
+                .toLowerCase()
+                .normalize('NFD')                      
+                .replace(/[\u0300-\u036f]/g, '')       
+                .replace(/[^a-z0-9\s-]/g, '')          
+                .replace(/\s+/g, '-')                 
+                .replace(/-+/g, '-')                  
+                .replace(/^-+|-+$/g, '');            
         },
     }
 

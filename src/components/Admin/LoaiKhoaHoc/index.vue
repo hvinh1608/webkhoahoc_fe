@@ -327,6 +327,11 @@ export default {
     mounted() {
         this.loadData();
     },
+    watch: {
+        'create.ten_khoa_hoc'(newVal) {
+            this.create.slug_khoa_hoc = this.toSlug(newVal);
+        }
+    },
     methods: {
         formatVND(number) {
             return new Intl.NumberFormat("vi-VI", {
@@ -476,6 +481,16 @@ export default {
                     console.log(res);
                     this.list = res.data.data1;
                 });
+        },
+        toSlug(text) {
+            return text
+                .toLowerCase()
+                .normalize('NFD')                      
+                .replace(/[\u0300-\u036f]/g, '')       
+                .replace(/[^a-z0-9\s-]/g, '')          
+                .replace(/\s+/g, '-')          
+                .replace(/-+/g, '-')                   
+                .replace(/^-+|-+$/g, '');             
         },
     },
 };
