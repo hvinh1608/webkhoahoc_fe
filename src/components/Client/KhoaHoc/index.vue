@@ -70,13 +70,64 @@
                 <p><i class="fa-solid fa-battery-full"></i> Học mọi lúc, mọi nơi</p>
             </div>
         </div>
+
+        <div class="col-lg-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="text-body mb-0">Bình luận khóa học</h4>
+            </div>
+
+            <!-- Form bình luận -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <textarea class="form-control mb-2" v-model="noi_dung_binh_luan" rows="3"
+                        placeholder="Viết bình luận của bạn..."></textarea>
+                    <button class="btn btn-primary" @click="guiBinhLuan()">Gửi bình luận</button>
+                </div>
+            </div>
+
+            <!-- Khung cuộn danh sách bình luận -->
+            <div class="card mb-4" style="max-height: 500px; overflow-y: auto;" ref="khungBinhLuan">
+                <div class="card-body">
+                    <div v-for="bl in ds_binh_luan" :key="bl.id" class="mb-3 border-bottom pb-3">
+                        <div class="d-flex align-items-start mb-3 border-bottom pb-3">
+                            <img class="rounded-circle shadow-1-strong me-3"
+                                src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(20).webp" alt="avatar"
+                                width="40" height="40" style="object-fit: cover;" />
+                            <div class="w-100">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="text-primary fw-bold mb-0">
+                                        {{ bl.ten_nguoi_dung }}
+                                        <span class="text-body ms-2">{{ bl.noi_dung }}</span>
+                                    </h6>
+                                    <p class="mb-0 text-muted small">Vừa xong</p>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="small mb-0 text-muted">
+                                        <a href="#!" class="link-grey">Reply</a> •
+                                        <a href="#!" class="link-grey">Report</a>
+                                    </p>
+                                </div>
+                                <div v-if="bl.ds_tra_loi && bl.ds_tra_loi.length" class="mt-3 ms-3">
+                                    <div v-for="tl in bl.ds_tra_loi" :key="tl.id"
+                                        class="p-3 bg-light rounded border mb-2">
+                                        <p class="mb-0">
+                                            <strong class="text-primary">Admin:</strong> {{ tl.noi_dung }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
-
 <script>
 import axios from 'axios';
 import Swal from 'sweetalert2';
-
 export default {
     props: ['id_khoa_hoc', 'slug_khoa_hoc'],
     data() {
@@ -86,14 +137,53 @@ export default {
             list_bai_hoc: [],
             link_video: "",
             check_mua_khoa_hoc: false,
-            isRegistered: false
+            isRegistered: false,
+            ds_binh_luan: [],
+            noi_dung_binh_luan: ""
         }
     },
     mounted() {
         this.loadChiTietKhoaHoc();
         this.checkMuaKhoaHoc();
+        this.loadBinhLuan();
     },
     methods: {
+        loadBinhLuan() {
+            axios.get(`http://127.0.0.1:8000/api/binh-luan/${this.id_khoa_hoc}`)
+                .then((res) => {
+                    this.ds_binh_luan = res.data.data;
+                    this.$nextTick(() => {
+                        const khung = this.$refs.khungBinhLuan;
+                        if (khung) {
+                            khung.scrollTop = khung.scrollHeight;
+                        }
+                    });
+                });
+        },
+
+        guiBinhLuan() {
+            if (!this.noi_dung_binh_luan.trim()) {
+                this.$toast.warning("Vui lòng nhập nội dung bình luận");
+                return;
+            }
+
+            const payload = {
+                id_khoa_hoc: this.id_khoa_hoc,
+                noi_dung: this.noi_dung_binh_luan
+            };
+
+            axios.post("http://127.0.0.1:8000/api/binh-luan/create", payload, {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem("key_khach_hang")
+                }
+            }).then((res) => {
+                if (res.data.status == 1) {
+                    this.$toast.success("Đã gửi bình luận");
+                    this.noi_dung_binh_luan = "";
+                    this.loadBinhLuan();
+                }
+            });
+        },
         checkMuaKhoaHoc() {
             var payload = {
                 id_khoa_hoc: this.id_khoa_hoc
@@ -179,5 +269,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

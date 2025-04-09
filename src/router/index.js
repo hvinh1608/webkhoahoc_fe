@@ -125,6 +125,11 @@ const routes = [
     beforeEnter: checkAdminLogin,
   },
   {
+    path: "/admin/comment",
+    component: () => import("../components/Admin/TraLoi/index.vue"),
+    beforeEnter: checkAdminLogin,
+  },
+  {
     path: "/admin/chart-khoa-hoc",
     component: () => import("../components/Admin/ChartMuaKhoaHoc/index.vue"),
     beforeEnter: checkAdminLogin,

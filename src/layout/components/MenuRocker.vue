@@ -97,9 +97,13 @@
                             <a class="dropdown-item" href="/admin/phan-quyen">Phân Quyền</a>
                         </router-link>
                     </li>
+                    <li>
+                        <router-link to="/admin/comment">
+                            <a class="dropdown-item" href="/admin/comment">Comment</a>
+                        </router-link>
+                    </li>
                 </ul>
             </li>
-
             <li class="nav-item">
                 <router-link to="/admin/trac-nghiem">
                     <a class="nav-link" href="/admin/trac-nghiem">
