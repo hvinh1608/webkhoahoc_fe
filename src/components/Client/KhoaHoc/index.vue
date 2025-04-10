@@ -91,8 +91,8 @@
                     <div v-for="bl in ds_binh_luan" :key="bl.id" class="mb-3 border-bottom pb-3">
                         <div class="d-flex align-items-start mb-3 border-bottom pb-3">
                             <img class="rounded-circle shadow-1-strong me-3"
-                                src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(20).webp" alt="avatar"
-                                width="40" height="40" style="object-fit: cover;" />
+                                src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(20).webp" width="40" height="40"
+                                style="object-fit: cover;" />
                             <div class="w-100">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <h6 class="text-primary fw-bold mb-0">
@@ -103,10 +103,19 @@
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <p class="small mb-0 text-muted">
-                                        <a href="#!" class="link-grey">Reply</a> •
-                                        <a href="#!" class="link-grey">Report</a>
+                                        <a href="javascript:void(0)"
+                                            @click="id_binh_luan_dang_tra_loi = (id_binh_luan_dang_tra_loi === bl.id ? null : bl.id)">Reply</a>
                                     </p>
                                 </div>
+
+                                <!-- Chỉ hiện textarea nếu người dùng đang bấm reply vào đúng bình luận đó -->
+                                <div v-if="id_binh_luan_dang_tra_loi === bl.id" class="mt-3">
+                                    <textarea class="form-control mb-2" rows="2"
+                                        placeholder="Nhập nội dung phản hồi..."></textarea>
+                                    <button class="btn btn-sm btn-primary">Gửi trả lời</button>
+                                </div>
+
+                                <!-- Hiển thị các trả lời (nếu có) -->
                                 <div v-if="bl.ds_tra_loi && bl.ds_tra_loi.length" class="mt-3 ms-3">
                                     <div v-for="tl in bl.ds_tra_loi" :key="tl.id"
                                         class="p-3 bg-light rounded border mb-2">
@@ -115,7 +124,6 @@
                                         </p>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -139,7 +147,8 @@ export default {
             check_mua_khoa_hoc: false,
             isRegistered: false,
             ds_binh_luan: [],
-            noi_dung_binh_luan: ""
+            noi_dung_binh_luan: "",
+            id_binh_luan_dang_tra_loi: null,
         }
     },
     mounted() {
@@ -149,7 +158,8 @@ export default {
     },
     methods: {
         loadBinhLuan() {
-            axios.get(`http://127.0.0.1:8000/api/binh-luan/${this.id_khoa_hoc}`)
+            axios
+                .get(`http://127.0.0.1:8000/api/binh-luan/${this.id_khoa_hoc}`)
                 .then((res) => {
                     this.ds_binh_luan = res.data.data;
                     this.$nextTick(() => {
@@ -172,17 +182,19 @@ export default {
                 noi_dung: this.noi_dung_binh_luan
             };
 
-            axios.post("http://127.0.0.1:8000/api/binh-luan/create", payload, {
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem("key_khach_hang")
-                }
-            }).then((res) => {
-                if (res.data.status == 1) {
-                    this.$toast.success("Đã gửi bình luận");
-                    this.noi_dung_binh_luan = "";
-                    this.loadBinhLuan();
-                }
-            });
+            axios
+                .post("http://127.0.0.1:8000/api/binh-luan/create", payload, {
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem("key_khach_hang")
+                    }
+                })
+                .then((res) => {
+                    if (res.data.status == 1) {
+                        this.$toast.success("Đã gửi bình luận");
+                        this.noi_dung_binh_luan = "";
+                        this.loadBinhLuan();
+                    }
+                });
         },
         checkMuaKhoaHoc() {
             var payload = {
