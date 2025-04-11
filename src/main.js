@@ -10,7 +10,9 @@ import vue3GoogleLogin from 'vue3-google-login';
 import Chatbox from "@/components/KhachHang/ChatBox/index.vue";
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
-import './assets/css/commonStyles.css'
+import './assets/css/commonStyles.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+
 
 const app = createApp(App)
 const chatboxApp = createApp(Chatbox);

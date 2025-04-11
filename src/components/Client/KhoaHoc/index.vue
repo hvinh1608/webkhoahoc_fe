@@ -110,20 +110,37 @@
 
                                 <!-- Chỉ hiện textarea nếu người dùng đang bấm reply vào đúng bình luận đó -->
                                 <div v-if="id_binh_luan_dang_tra_loi === bl.id" class="mt-3">
-                                    <textarea class="form-control mb-2" rows="2"
-                                        placeholder="Nhập nội dung phản hồi..."></textarea>
-                                    <button class="btn btn-sm btn-primary">Gửi trả lời</button>
+                                    <textarea class="form-control mb-2" rows="2" placeholder="Nhập nội dung phản hồi..."
+                                        v-model="noi_dung_tra_loi[bl.id]"></textarea>
+                                    <button class="btn btn-sm btn-primary" @click="guiTraLoi(bl.id)">Gửi trả
+                                        lời</button>
+
                                 </div>
 
                                 <!-- Hiển thị các trả lời (nếu có) -->
-                                <div v-if="bl.ds_tra_loi && bl.ds_tra_loi.length" class="mt-3 ms-3">
-                                    <div v-for="tl in bl.ds_tra_loi" :key="tl.id"
-                                        class="p-3 bg-light rounded border mb-2">
-                                        <strong>
-                                            {{ tl.ten_nguoi_dung }}
-                                            <span v-if="tl.vai_tro" class="text-muted small">({{ tl.vai_tro }})</span>:
-                                        </strong>
-                                        {{ tl.noi_dung }}
+                                <div v-for="tl in bl.ds_tra_loi" :key="tl.id" class="p-3 bg-light rounded border mb-2">
+                                    <strong>
+                                        {{ tl.ten_nguoi_dung }}
+                                        <span v-if="tl.vai_tro" class="text-muted small">({{ tl.vai_tro }})</span>:
+                                    </strong>
+                                    {{ tl.noi_dung }}
+
+                                    <!-- Nút reply cho trả lời con -->
+                                    <div>
+                                        <a href="javascript:void(0)" class="small text-primary"
+                                            @click="id_tra_loi_dang_tra_loi = (id_tra_loi_dang_tra_loi === tl.id ? null : tl.id)">
+                                            Reply
+                                        </a>
+                                    </div>
+
+                                    <!-- Khung nhập trả lời nếu đang active -->
+                                    <div v-if="id_tra_loi_dang_tra_loi === tl.id" class="mt-2">
+                                        <textarea class="form-control mb-2" rows="2"
+                                            placeholder="Nhập nội dung phản hồi..."
+                                            v-model="noi_dung_tra_loi_con[tl.id]"></textarea>
+                                        <button class="btn btn-sm btn-secondary" @click="guiTraLoiCon(bl.id, tl.id)">Gửi
+                                            trả
+                                            lời</button>
                                     </div>
                                 </div>
                             </div>
@@ -150,6 +167,9 @@ export default {
             ds_binh_luan: [],
             noi_dung_binh_luan: "",
             id_binh_luan_dang_tra_loi: null,
+            noi_dung_tra_loi: {},
+            id_tra_loi_dang_tra_loi: null,
+            noi_dung_tra_loi_con: {},
         }
     },
     mounted() {
@@ -197,6 +217,36 @@ export default {
                     }
                 });
         },
+        guiTraLoi(id_binh_luan_cha) {
+            const noi_dung = this.noi_dung_tra_loi[id_binh_luan_cha];
+
+            if (!noi_dung || !noi_dung.trim()) {
+                this.$toast.warning("Vui lòng nhập nội dung trả lời");
+                return;
+            }
+
+            const payload = {
+                id_khoa_hoc: this.id_khoa_hoc,
+                binh_luan_id: id_binh_luan_cha,
+                noi_dung: noi_dung
+            };
+
+
+            axios.post("http://127.0.0.1:8000/api/tra-loi-binh-luan", payload, {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem("key_khach_hang")
+                }
+            })
+                .then((res) => {
+                    if (res.data.status == 1) {
+                        this.$toast.success("Đã gửi trả lời");
+                        this.noi_dung_tra_loi[id_binh_luan_cha] = "";
+                        this.id_binh_luan_dang_tra_loi = null;
+                        this.loadBinhLuan();
+                    }
+                });
+        },
+
         checkMuaKhoaHoc() {
             var payload = {
                 id_khoa_hoc: this.id_khoa_hoc
