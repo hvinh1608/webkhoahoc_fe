@@ -119,9 +119,11 @@
                                 <div v-if="bl.ds_tra_loi && bl.ds_tra_loi.length" class="mt-3 ms-3">
                                     <div v-for="tl in bl.ds_tra_loi" :key="tl.id"
                                         class="p-3 bg-light rounded border mb-2">
-                                        <p class="mb-0">
-                                            <strong class="text-primary">Admin:</strong> {{ tl.noi_dung }}
-                                        </p>
+                                        <strong>
+                                            {{ tl.ten_nguoi_dung }}
+                                            <span v-if="tl.vai_tro" class="text-muted small">({{ tl.vai_tro }})</span>:
+                                        </strong>
+                                        {{ tl.noi_dung }}
                                     </div>
                                 </div>
                             </div>
@@ -130,7 +132,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 </template>
 <script>
