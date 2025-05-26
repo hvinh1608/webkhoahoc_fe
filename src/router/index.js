@@ -1,0 +1,267 @@
+import { createRouter, createWebHistory } from "vue-router";
+import checkAdminLogin from "./checkAdminLogin";
+import checkKhachHangLogin from "./checkKhachHangLogin";
+import ChiTietBaiViet from "../components/Client/ChiTietBaiViet/index.vue";
+const routes = [
+  {
+    path: "/",
+    component: () => import("../components/Client/TrangChu/index.vue"),
+    meta: { layout: "client" },
+  },
+  {
+    path: "/trang-chu",
+    component: () => import("../components/Client/TrangChu/index.vue"),
+    meta: { layout: "client" },
+    beforeEnter: checkKhachHangLogin,
+  },
+  {
+    path: "/tat-ca-khoa-hoc",
+    component: () => import("../components/Client/Tatcakhoahoc/index.vue"),
+    meta: { layout: "client" },
+  },
+  {
+    path: "/tat-ca-khoa-hoc-free",
+    component: () => import("../components/Client/Tatcakhoahocfree/index.vue"),
+    meta: { layout: "client" },
+  },
+  {
+    path: "/demo",
+    component: () => import("../components/Test/test.vue"),
+    meta: { layout: "blank" },
+  },
+  {
+    path: "/kich-hoat/:id_khach_hang",
+    component: () => import("../components/KhachHang/KichHoat/index.vue"),
+    meta: { layout: "blank" },
+    props: true,
+  },
+  {
+    path: "/chi-tiet-khoa-hoc/:id_khoa_hoc-:slug_khoa_hoc",
+    name: "KhoaHocChiTiet",
+    component: () => import("../components/Client/KhoaHoc/index.vue"),
+    meta: { layout: "client" },
+    props: true,
+  },
+  {
+    path: "/chi-tiet-khoa-hoc-free/:id_khoa_hoc_free-:slug",
+    component: () => import("../components/Client/KhoaHocFree/index.vue"),
+    meta: { layout: "client" },
+    props: true,
+  },
+  {
+    path: "/bai-viet/:slug_chuyen_muc",
+    component: () => import("../components/Client/BaiViet/index.vue"),
+    meta: { layout: "client" },
+    props: true,
+  },
+  {
+    path: "/chi-tiet-bai-viet/:id",
+    name: "ChiTietBaiViet",
+    component: ChiTietBaiViet,
+    props: true,
+    meta: { layout: "client" },
+  },
+  {
+    path: "/gio-hang",
+    component: () => import("../components/Client/GioHang/index.vue"),
+    meta: { layout: "client" },
+    beforeEnter: checkKhachHangLogin,
+  },
+  {
+    path: "/khoa-hoc/:id/trac-nghiem",
+    component: () => import("../components/Client/TracNghiem/index.vue"),
+    meta: { layout: "client" },
+    beforeEnter: checkKhachHangLogin,
+  },
+  {
+    path: "/danh-sach-khoa-hoc",
+    component: () => import("../components/Client/DanhSachKhoaHoc/index.vue"),
+    meta: { layout: "client" },
+    beforeEnter: checkKhachHangLogin,
+  },
+  {
+    path: "/profile",
+    component: () => import("../components/KhachHang/Profile/index.vue"),
+    meta: { layout: "client" },
+    beforeEnter: checkKhachHangLogin,
+  },
+  {
+    path: "/profile-khachhang/:id",
+    name: "ProfileKhachHang",
+    component: () =>
+      import("../components/KhachHang/ProfileKhachHang/index.vue"),
+    meta: { layout: "client" },
+    beforeEnter: checkKhachHangLogin,
+    props: true,
+  },
+  {
+    path: "/danh-gia",
+    component: () => import("../components/Client/DanhGia/index.vue"),
+    meta: { layout: "client" },
+    beforeEnter: checkKhachHangLogin,
+  },
+  {
+    path: "/bang-xep-hang",
+    component: () => import("../components/Client/BangXepHang/index.vue"),
+    meta: { layout: "client" },
+    beforeEnter: checkKhachHangLogin,
+  },
+  {
+    path: "/onboarding",
+    component: () => import("../components/Client/Onboarding/index.vue"),
+    meta: { layout: "blank" },
+    beforeEnter: checkKhachHangLogin,
+  },
+  {
+    path: "/admin/loai-khoa-hoc",
+    component: () => import("../components/Admin/LoaiKhoaHoc/index.vue"),
+    beforeEnter: checkAdminLogin,
+  },
+  {
+    path: "/admin/khoa-hoc-free",
+    component: () => import("../components/Admin/KhoaHocFree/index.vue"),
+    beforeEnter: checkAdminLogin,
+  },
+  {
+    path: "/admin/danh-gia",
+    component: () => import("../components/Admin/DanhGia/index.vue"),
+    beforeEnter: checkAdminLogin,
+  },
+  {
+    path: "/admin/khach-hang",
+    component: () => import("../components/Admin/KhachHang/index.vue"),
+    beforeEnter: checkAdminLogin,
+  },
+  {
+    path: "/admin/phan-quyen",
+    component: () => import("../components/Admin/PhanQuyen/index.vue"),
+    beforeEnter: checkAdminLogin,
+  },
+  {
+    path: "/admin/lich-su-giao-dich",
+    component: () => import("../components/Admin/LichSuGiaoDich/index.vue"),
+    beforeEnter: checkAdminLogin,
+  },
+  {
+    path: "/admin/nhan-vien",
+    component: () => import("../components/Admin/NhanVien/index.vue"),
+    beforeEnter: checkAdminLogin,
+  },
+  {
+    path: "/admin/bai-hoc",
+    component: () => import("../components/Admin/BaiHoc/index.vue"),
+    beforeEnter: checkAdminLogin,
+  },
+  {
+    path: "/admin/bai-hoc-free",
+    component: () => import("../components/Admin/BaiHocFree/index.vue"),
+    beforeEnter: checkAdminLogin,
+  },
+  {
+    path: "/admin/chart",
+    component: () => import("../components/Admin/Chart/index.vue"),
+    beforeEnter: checkAdminLogin,
+  },
+  {
+    path: "/admin/comment",
+    component: () => import("../components/Admin/TraLoi/index.vue"),
+    beforeEnter: checkAdminLogin,
+  },
+  {
+    path: "/admin/chart-khoa-hoc",
+    component: () => import("../components/Admin/ChartMuaKhoaHoc/index.vue"),
+    beforeEnter: checkAdminLogin,
+  },
+  {
+    path: "/admin/chart-khach-hang",
+    component: () => import("../components/Admin/ChartKHDangKy/index.vue"),
+    beforeEnter: checkAdminLogin,
+  },
+  {
+    path: "/admin/chart-danh-gia",
+    component: () => import("../components/Admin/ChartDanhGia/index.vue"),
+    beforeEnter: checkAdminLogin,
+  },
+  {
+    path: "/admin/coupon",
+    component: () => import("../components/Admin/Coupon/index.vue"),
+    beforeEnter: checkAdminLogin,
+  },
+  {
+    path: "/khach-hang/dang-nhap",
+    component: () => import("../components/KhachHang/DangNhap/index.vue"),
+    meta: { layout: "blank" },
+  },
+  {
+    path: "/khach-hang/dang-ky",
+    component: () => import("../components/KhachHang/DangKi/index.vue"),
+    meta: { layout: "blank" },
+  },
+  {
+    path: "/khach-hang/reset-password",
+    component: () => import("../components/KhachHang/QuenMatKhau/index.vue"),
+    meta: { layout: "blank" },
+  },
+  {
+    path: "/khach-hang/doi-mat-khau/:hash_reset",
+    component: () => import("../components/KhachHang/DoiMatKhau/index.vue"),
+    meta: { layout: "blank" },
+    props: true,
+  },
+  {
+    path: "/admin/dang-nhap",
+    component: () => import("../components/Admin//DangNhap/index.vue"),
+    meta: { layout: "blank" },
+  },
+  {
+    path: "/admin/bai-viet",
+    component: () => import("../components/Admin/BaiViet/index.vue"),
+    beforeEnter: checkAdminLogin,
+  },
+  {
+    path: "/admin/chuyen-muc",
+    component: () => import("../components/Admin/ChuyenMuc/index.vue"),
+    beforeEnter: checkAdminLogin,
+  },
+  {
+    path: "/admin/trac-nghiem",
+    component: () => import("../components/Admin/TracNghiem/index.vue"),
+    beforeEnter: checkAdminLogin,
+  },
+  {
+    path: "/admin/profile",
+    component: () => import("../components/Admin/Profile/index.vue"),
+    beforeEnter: checkAdminLogin,
+  },
+];
+
+import axios from "axios";
+const router = createRouter({
+  history: createWebHistory(),
+  routes: routes,
+});
+
+router.beforeEach(async (to, from, next) => {
+  // Nếu chưa đăng nhập thì next()
+  if (!localStorage.getItem("key_khach_hang")) return next();
+
+  // Không cần check khi đã ở trang onboarding
+  if (to.path === "/onboarding") return next();
+
+  // Gọi API check onboarding
+  try {
+    const res = await axios.get("http://127.0.0.1:8000/api/check-onboarding", {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("key_khach_hang"),
+      },
+    });
+    if (res.data.is_first_login) {
+      return next("/onboarding");
+    }
+  } catch (e) {
+    // Nếu lỗi thì cho qua
+  }
+  next();
+});
+
+export default router;
