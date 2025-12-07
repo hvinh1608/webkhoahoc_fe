@@ -3,7 +3,7 @@
         <div class="row row-cols-lg-2">
             <div class="col mx-auto">
                 <div class="mb-4 text-center">
-                    <img src="https://dzfullstack.com/assets/images/logo-1.png" width="180" alt="" />
+                    <img src="/images/logo.jpg" width="180" alt="" />
                 </div>
                 <div class="card">
                     <div class="card-body">

@@ -432,7 +432,7 @@ export default {
                     if (res.data.status) {
                         this.toast.success(res.data.message)
                         var noi_dung_chuyen_tien = res.data.noi_dung_chuyen_tien;
-                        this.link_qr = "https://img.vietqr.io/image/MB-56700112233-compact2.png?amount=" +
+                        this.link_qr = "https://img.vietqr.io/image/MB-0901175324-compact2.png?amount=" +
                             this.so_tien_nap +
                             "&addInfo=" + encodeURIComponent(noi_dung_chuyen_tien) +
                             "&accountName=" + encodeURIComponent("Trần Ngô Hồng Vinh");

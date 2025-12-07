@@ -54,14 +54,19 @@
                         </tr>
                         <tr v-for="(khoaHoc, index) in list_khoa_hoc_dang_ky" :key="khoaHoc.id">
                             <th class="text-center">{{ index + 1 }}</th>
-                            <td>{{ khoaHoc.title }}</td>
+                            <td class="khoa-hoc-link" 
+                                style="cursor: pointer;"
+                                @click="goToKhoaHocFree(khoaHoc.id, khoaHoc.slug)">
+                                {{ khoaHoc.title }}
+                            </td>
                             <td class="text-center">{{ formatdate(khoaHoc.created_at) }}</td>
                             <td class="text-center">
                                 <span v-if="khoaHoc.is_free == 1" class="badge bg-success fs-5">{{ $t('free_badge')
                                     }}</span>
                             </td>
                             <td class="text-center">
-                                <img :src="khoaHoc.image" style="width: 150px; height: 100px;">
+                                <img :src="khoaHoc.image" style="width: 150px; height: 100px; cursor: pointer;"
+                                    @click="goToKhoaHocFree(khoaHoc.id, khoaHoc.slug)">
                             </td>
                             <td class="text-center">Vĩnh viễn</td>
                             <td class="text-center">
@@ -104,6 +109,14 @@ export default {
                 return;
             }
             this.$router.push({ name: 'KhoaHocChiTiet', params: { id_khoa_hoc: id, slug_khoa_hoc: slug } });
+        },
+        goToKhoaHocFree(id, slug) {
+            if (!id || !slug) {
+                this.toast && this.toast.error('Không tìm thấy đường dẫn khóa học!');
+                return;
+            }
+            // Chuyển đến trang khóa học free theo format: /chi-tiet-khoa-hoc-free/:id-:slug
+            this.$router.push({ path: `/chi-tiet-khoa-hoc-free/${id}-${slug}` });
         },
         goToTatCaKhoaHoc() {
             this.$router.push({ path: '/tat-ca-khoa-hoc' });

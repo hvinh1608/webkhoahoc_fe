@@ -414,7 +414,7 @@ export default {
                 const currentTime = this.player.getCurrentTime();
                 const duration = this.player.getDuration();
 
-                if (currentTime >= duration * 0.9) { // Người dùng phải xem ít nhất 90% video
+                if (currentTime >= duration * 0.0) { // Người dùng phải xem ít nhất 90% video
                     this.capNhatTienDo();
                 } else {
                     this.toast.warning('Bạn cần xem ít nhất 90% video để hoàn thành bài học!');
@@ -423,10 +423,10 @@ export default {
         },
 
         capNhatTienDo() {
-            if (!this.hasWatchedEnough) {
-                this.toast.warning('Bạn cần xem ít nhất 90% video để hoàn thành bài học!');
-                return;
-            }
+            // if (!this.hasWatchedEnough) {
+            //     this.toast.warning('Bạn cần xem ít nhất 90% video để hoàn thành bài học!');
+            //     return;
+            // }
 
             if (!this.currentLessonId) return;
 
