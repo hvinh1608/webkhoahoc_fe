@@ -165,6 +165,33 @@
             </div>
         </div>
     </div>
+    <!-- Modal điền thông tin profile -->
+    <div class="modal fade" id="completeProfileModal" tabindex="-1" aria-labelledby="completeProfileLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="completeProfileLabel">Hoàn thành thông tin tài khoản</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" :disabled="true"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Số điện thoại</label>
+                        <input type="tel" v-model="profileData.so_dien_thoai" class="form-control" placeholder="0123456789">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ngày sinh</label>
+                        <input type="date" v-model="profileData.ngay_sinh" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @click="updateProfile" :disabled="profileLoading">
+                        <i v-if="profileLoading" class="fa-solid fa-spinner fa-spin me-2"></i>
+                        Lưu thông tin
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -187,6 +214,11 @@ export default {
             rememberMe: false,
             showPassword: false,
             loading: false,
+            profileData: {
+                so_dien_thoai: "",
+                ngay_sinh: ""
+            },
+            profileLoading: false,
         };
     },
     setup() {
@@ -218,10 +250,13 @@ export default {
             localStorage.setItem("key_khach_hang", token);
             if (isFirstLogin === "1") {
                 this.toast && this.toast.success(`Đăng ký bằng tài khoản${providerText ? ' ' + providerText : ''} thành công!`);
+                // Redirect to onboarding only on first login
+                this.$router.replace("/onboarding");
             } else {
                 this.toast && this.toast.success(`Đăng nhập bằng tài khoản${providerText ? ' ' + providerText : ''} thành công!`);
+                // Regular login, go to home
+                this.$router.replace("/trang-chu");
             }
-            this.$router.replace("/trang-chu");
         }
 
         const savedEmail = localStorage.getItem("remember_email");
@@ -290,10 +325,13 @@ export default {
                             localStorage.removeItem("remember_email");
                         }
 
-                        // Kiểm tra thông tin lần đầu đăng nhập từ API
+                        // Kiểm tra lần đầu đăng nhập - nếu có is_first_login=1 thì redirect onboarding
                         const isFirstLogin = res.data.is_first_login;
-
-                        this.$router.push("/trang-chu");
+                        if (isFirstLogin === 1 || isFirstLogin === "1") {
+                            this.$router.push("/onboarding");
+                        } else {
+                            this.$router.push("/trang-chu");
+                        }
                     } else {
                         this.toast.error(res.data.message);
                     }
@@ -323,6 +361,64 @@ export default {
         //         this.toast.error("Đăng nhập Google thất bại");
         //     }
         // },
+
+        checkProfileComplete() {
+            const token = localStorage.getItem("key_khach_hang");
+            axios.get("http://127.0.0.1:8000/api/khach-hang/check-profile-complete", {
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+            }).then(res => {
+                if (res.data.status && !res.data.is_complete) {
+                    // Profile chưa hoàn thành, hiển thị modal
+                    const modal = new window.bootstrap.Modal(document.getElementById('completeProfileModal'));
+                    modal.show();
+                } else {
+                    // Profile đã hoàn thành, redirect
+                    this.$router.replace("/trang-chu");
+                }
+            }).catch(error => {
+                console.error("Lỗi khi check profile:", error);
+                // Nếu lỗi, vẫn redirect (cho trường hợp endpoint chưa được tạo)
+                this.$router.replace("/trang-chu");
+            });
+        },
+
+        updateProfile() {
+            if (!this.profileData.so_dien_thoai || !this.profileData.ngay_sinh) {
+                this.toast.error("Vui lòng điền đầy đủ thông tin!");
+                return;
+            }
+
+            this.profileLoading = true;
+            const token = localStorage.getItem("key_khach_hang");
+            
+            axios.post("http://127.0.0.1:8000/api/khach-hang/update-profile-complete", {
+                so_dien_thoai: this.profileData.so_dien_thoai,
+                ngay_sinh: this.profileData.ngay_sinh
+            }, {
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+            }).then(res => {
+                if (res.data.status) {
+                    this.toast.success(res.data.message || "Cập nhật thông tin thành công!");
+                    // Đóng modal và redirect
+                    const modal = window.bootstrap.Modal.getInstance(document.getElementById('completeProfileModal'));
+                    modal.hide();
+                    setTimeout(() => {
+                        this.$router.replace("/trang-chu");
+                    }, 1000);
+                } else {
+                    this.toast.error(res.data.message || "Cập nhật thất bại!");
+                }
+            }).catch(error => {
+                console.error("Lỗi cập nhật profile:", error);
+                this.toast.error("Lỗi cập nhật thông tin!");
+            }).finally(() => {
+                this.profileLoading = false;
+            });
+        },
     },
 };
 </script>

@@ -44,15 +44,25 @@
                 </select>
             </div>
             <div>
-                <label>Độ tuổi:</label>
-                <select v-model="age" required>
+                <label>Bạn quan tâm đến lĩnh vực nào?</label>
+                <select v-model="interest" required>
                     <option value="">Chọn</option>
-                    <option value="under18">Dưới 18</option>
-                    <option value="18-24">18-24</option>
-                    <option value="25-34">25-34</option>
-                    <option value="35-44">35-44</option>
-                    <option value="45plus">Trên 45</option>
+                    <option value="web">Web Development</option>
+                    <option value="mobile">Mobile Development</option>
+                    <option value="ai">AI/Machine Learning</option>
+                    <option value="data">Data Science</option>
+                    <option value="devops">DevOps/Cloud</option>
+                    <option value="game">Game Development</option>
+                    <option value="other">Khác</option>
                 </select>
+            </div>
+            <div v-if="!hasPhoneBirthday">
+                <label>Số điện thoại:</label>
+                <input type="tel" v-model="so_dien_thoai" class="form-control" placeholder="0123456789" required>
+            </div>
+            <div v-if="!hasPhoneBirthday">
+                <label>Ngày sinh:</label>
+                <input type="date" v-model="ngay_sinh" class="form-control" required>
             </div>
             <button type="submit" :disabled="isSubmitting">Gửi</button>
         </form>
@@ -68,31 +78,89 @@ export default {
             workplace: "",
             purpose: "",
             experience: "",
-            age: "",
+            interest: "",
+            so_dien_thoai: "",
+            ngay_sinh: "",
             isSubmitting: false,
+            hasPhoneBirthday: false, // User đã có phone và birthday chưa
         };
+    },
+    mounted() {
+        // Check xem user đã có phone và birthday chưa
+        const token = localStorage.getItem("key_khach_hang");
+        axios.get("http://127.0.0.1:8000/api/khach-hang/check-profile-complete", {
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        }).then(res => {
+            console.log("Check profile response:", res.data);
+            if (res.data.status && res.data.is_complete) {
+                // User đã có đầy đủ phone và birthday
+                this.hasPhoneBirthday = true;
+                this.so_dien_thoai = res.data.so_dien_thoai || "";
+                this.ngay_sinh = res.data.ngay_sinh || "";
+                console.log("User đã có phone và birthday, ẩn 2 field");
+            } else {
+                console.log("User chưa có phone/birthday, hiển thị đầy đủ");
+            }
+        }).catch(error => {
+            console.error("Lỗi khi check profile:", error);
+        });
     },
     methods: {
         submit() {
             if (this.isSubmitting) return;
+            
+            // Nếu chưa có phone/birthday, kiểm tra đã điền chưa
+            if (!this.hasPhoneBirthday && (!this.so_dien_thoai || !this.ngay_sinh)) {
+                this.$toast.error("Vui lòng điền đầy đủ thông tin số điện thoại và ngày sinh!");
+                return;
+            }
+
             this.isSubmitting = true;
+            const token = localStorage.getItem("key_khach_hang");
+            
+            // Submit onboarding survey
             axios.post("http://127.0.0.1:8000/api/onboarding-survey", {
                 job: this.job,
                 workplace: this.workplace,
                 purpose: this.purpose,
                 experience: this.experience,
-                age: this.age,
+                interest: this.interest,
             }, {
                 headers: {
-                    Authorization: "Bearer " + localStorage.getItem("key_khach_hang"),
+                    Authorization: "Bearer " + token,
                 },
             })
                 .then(() => {
-                    localStorage.setItem("showTourAfterOnboarding", "1");
-                    this.$router.replace("/trang-chu");
+                    // Nếu đã có phone/birthday rồi, không cần update
+                    if (this.hasPhoneBirthday) {
+                        this.$toast.success("Cập nhật thông tin thành công!");
+                        localStorage.setItem("showTourAfterOnboarding", "1");
+                        this.$router.replace("/trang-chu");
+                        return;
+                    }
+                    
+                    // Nếu chưa có, update profile với phone và birthday
+                    return axios.post("http://127.0.0.1:8000/api/khach-hang/update-profile-complete", {
+                        so_dien_thoai: this.so_dien_thoai,
+                        ngay_sinh: this.ngay_sinh
+                    }, {
+                        headers: {
+                            Authorization: 'Bearer ' + token
+                        }
+                    });
                 })
-                .catch(() => {
-                    this.$toast.error("Có lỗi xảy ra trong quá trình gửi thông tin. Vui lòng thử lại sau.");
+                .then(() => {
+                    if (!this.hasPhoneBirthday) {
+                        this.$toast.success("Cập nhật thông tin thành công!");
+                        localStorage.setItem("showTourAfterOnboarding", "1");
+                        this.$router.replace("/trang-chu");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Lỗi:", error);
+                    this.$toast.error("Có lỗi xảy ra. Vui lòng thử lại sau.");
                 })
                 .finally(() => {
                     this.isSubmitting = false;
